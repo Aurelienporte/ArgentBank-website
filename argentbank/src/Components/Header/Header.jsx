@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleUser,
@@ -9,8 +9,12 @@ import {
 import logo from "../../img/argentBankLogo.png";
 import "./Header.css";
 
+import { logOut } from "../../features/user/userSlice";
+
 function Header() {
-  const [isConnected, setIsConnected] = useState(false);
+  const firstName = useSelector((state) => state.user.firstName);
+  const isConnected = useSelector((state) => state.user.isConnected);
+  const dispatch = useDispatch();
 
   return (
     <nav className="main-nav">
@@ -24,9 +28,9 @@ function Header() {
       </Link>
       <div>
         {isConnected && (
-          <Link to="/signin/:userId" className="main-nav-item">
+          <Link to="/user" className="main-nav-item">
             <FontAwesomeIcon icon={faCircleUser} />
-            <span>&nbsp;User&nbsp;</span>
+            <span>&nbsp;{firstName}&nbsp;</span>
           </Link>
         )}
         <Link to={isConnected ? "/" : "/signin"} className="main-nav-item">
@@ -35,12 +39,12 @@ function Header() {
               <FontAwesomeIcon
                 icon={faRightFromBracket}
                 onClick={() => {
-                  setIsConnected(false);
+                  dispatch(logOut());
                 }}
               />
               <span
                 onClick={() => {
-                  setIsConnected(false);
+                  dispatch(logOut());
                 }}
               >
                 &nbsp;Sign Out

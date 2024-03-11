@@ -53,3 +53,27 @@
       flex-direction: row;
     }
 }
+
+.modal{
+    background-image: linear-gradient(transparent 0%, white 30%);
+    background-color: white;
+    overflow: visible;
+}
+dialog{
+    position: relative;
+    border: none;
+
+}
+[data-icon="circle-xmark"]{
+    font-size: 2rem;
+    position: absolute;
+    top: -1rem;
+    right: -1rem;
+    color: white;
+    border-radius: 50%;
+    border: 2px solid #00bc77;
+    background-color: #00bc77;
+}
+dialog::backdrop{
+    background-color: rgb(0,0,0,.3);
+  }
