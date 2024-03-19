@@ -6,16 +6,18 @@ export const apiSlice = createApi({
 
   reducerPath: 'api',
 
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api/v1',
-  prepareHeaders: (headers, { getState }) => {
-    const token = getState().user.token
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: 'http://localhost:3001/api/v1',
+    prepareHeaders: (headers, { getState }) => {
+      const token = getState().user.token
 
-    // If we have a token set in state, let's assume that we should be passing it.
-    if (token) {
-      headers.set('authorization', `Bearer ${token}`)
-    }
+      // If we have a token set in state, let's assume that we should be passing it.
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`)
+      }
 
-    return headers} 
+      return headers
+    } 
   }),
 
   endpoints: builder => ({
@@ -43,5 +45,5 @@ export const apiSlice = createApi({
   })
 })
 
-// Export the auto-generated hook for the `getPosts` query endpoint
+// Export the auto-generated hook for the query endpoint
 export const { useUserLoginMutation , useGetUserMutation, useSetUserMutation} = apiSlice

@@ -17,14 +17,17 @@
   background-color: #00bc77;
   color: #fff;
 }
+.label-wrapper{
+  display: flex;
+  justify-content: space-between;
+}
 
-.sign-in-content {
-  box-sizing: border-box;
-  background-color: white;
-  width: 300px;
-  margin: 0 auto;
-  margin-top: 3rem;
-  padding: 2rem;
+.error{
+  color:#e2351f;
+}
+
+:disabled{
+  opacity: 0.7;
 }
 
 .sign-in-icon {

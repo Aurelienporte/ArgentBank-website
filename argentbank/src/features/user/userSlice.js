@@ -20,6 +20,7 @@ const initialState = {
       },
       userName: (state, action) => {
         state.userName = action.payload
+        console.log("username mis à jour")
       },
       logIn: (state) => {
         state.isConnected = true
