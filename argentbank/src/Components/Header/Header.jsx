@@ -10,7 +10,7 @@ import logo from "../../img/argentBankLogo.png";
 import "./Header.css";
 
 import { logOut } from "../../features/user/userSlice";
-
+import { noError } from "../../features/form/formSlice";
 function Header() {
   const firstName = useSelector((state) => state.user.firstName);
   const isConnected = useSelector((state) => state.user.isConnected);
@@ -18,7 +18,13 @@ function Header() {
 
   return (
     <nav className="main-nav">
-      <Link to="/" className="main-nav-logo">
+      <Link
+        to="/"
+        className="main-nav-logo"
+        onClick={() => {
+          dispatch(noError());
+        }}
+      >
         <img
           className="main-nav-logo-image"
           src={logo}

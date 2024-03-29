@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
@@ -20,13 +20,13 @@ import { hasError, noError } from "../../features/form/formSlice";
 
 function SignIn() {
   const isConnected = useSelector((state) => state.user.isConnected);
+  const errorLogin = useSelector((state) => state.form.hasError);
   const [login] = useUserLoginMutation();
   const [getUser] = useGetUserMutation();
   const dispatch = useDispatch();
 
   let nameRef = useRef(null);
   let passwordRef = useRef(null);
-  const [errorLogin, setErrorLogin] = useState(false);
 
   async function submit(e) {
     e.preventDefault();
@@ -36,12 +36,14 @@ function SignIn() {
     };
 
     try {
-      await login(credentials)
+      //user logging
+      login(credentials)
         .unwrap()
         .then((success) => {
           if (success.status === 200) {
             dispatch(setToken(success.body.token));
             try {
+              // profile loading
               getUser()
                 .unwrap()
                 .then((profile) => {
@@ -56,54 +58,47 @@ function SignIn() {
             }
           }
         })
+        //Error management when logging
         .catch((error) => {
           console.log("An error occured : ", error);
           if (error.status >= 400 && error.status < 500) {
-            setErrorLogin("Invalid Fields");
-            dispatch(hasError());
+            dispatch(hasError("Invalid Fields"));
           }
           if (error.status >= 500) {
-            setErrorLogin("Internal Server Error");
-            dispatch(hasError());
+            dispatch(hasError("Server Error"));
           }
         });
     } catch (err) {
       console.log("An error occured : ", err);
     }
   }
+
+  //Redirect to dashboard if connected or load the sign in form
   return isConnected ? (
     <Navigate to="/user"></Navigate>
   ) : (
     <main className="main bg-dark">
       <FormWrapper title="Sign In" submit={submit}>
         <div className="input-wrapper">
-          <div className="label-wrapper">
-            <label htmlFor="username">Username</label>
-            {errorLogin && <span className="error">{errorLogin}</span>}
-          </div>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
             id="username"
             name="username"
             ref={nameRef}
             onChange={() => {
-              setErrorLogin(null);
               dispatch(noError());
             }}
           />
         </div>
         <div className="input-wrapper">
-          <div className="label-wrapper">
-            <label htmlFor="password">Password</label>
-            {errorLogin && <span className="error">{errorLogin}</span>}
-          </div>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             id="password"
             name="password"
             ref={passwordRef}
             onChange={() => {
-              setErrorLogin(null);
               dispatch(noError());
             }}
           />
@@ -113,11 +108,17 @@ function SignIn() {
           <label htmlFor="remember-me">Remember me</label>
         </div>
         {errorLogin ? (
-          <button className="sign-in-button" disabled>
-            Sign In
-          </button>
+          <div className="button-wrapper">
+            <button className="sign-in-button" disabled>
+              Sign In
+            </button>
+            <span className="error">{errorLogin}</span>
+          </div>
         ) : (
-          <button className="sign-in-button">Sign In</button>
+          <div className="button-wrapper">
+            <button className="sign-in-button">Sign In</button>
+            <span className="error hidden">OK</span>
+          </div>
         )}
       </FormWrapper>
     </main>

@@ -5,7 +5,7 @@
     width: 300px;
     margin: 0 auto;
     margin-top: 3rem;
-    padding: 2rem;
+    padding: 2rem 2rem .25rem;
   }
 
   .form-error{

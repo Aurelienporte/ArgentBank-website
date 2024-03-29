@@ -43,31 +43,28 @@ function Dashboard() {
   const [editName] = useSetUserMutation();
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
-  const [errorEditing, setErrorEditing] = useState(false);
+  const errorEditing = useSelector((state) => state.form.hasError);
   let newNameRef = useRef(null);
 
   async function submit(e) {
     e.preventDefault();
     let newName = { userName: newNameRef.current.value };
-    console.log("nom récupéré", newName);
+
     try {
       editName(newName)
         .unwrap()
         .then((success) => {
-          dispatch(userName(success.body.userName));
           if (success.status === 200) {
-            console.log("username retouné :", success.body.userName);
+            dispatch(userName(success.body.userName));
           }
         })
         .catch((err) => {
           console.log("error editing", err);
           if (err.status >= 400 && err.status < 500) {
-            setErrorEditing("Unauthorised");
-            dispatch(hasError());
+            dispatch(hasError("Unauthorised"));
           }
           if (err.status >= 500) {
-            setErrorEditing("Server Error");
-            dispatch(hasError());
+            dispatch(hasError("Server Error"));
           }
         });
       setIsEditing(false);
@@ -77,8 +74,10 @@ function Dashboard() {
     }
   }
 
+  //Redirect to homepage if not connected or load the dashboard
   return isConnected ? (
     <main className="main bg-dark">
+      {/*Depend on state, load header or editing userName form*/}
       <div className={!isEditing ? "header light" : "header"}>
         {!isEditing ? (
           <>
@@ -96,10 +95,7 @@ function Dashboard() {
         ) : (
           <FormWrapper title="Edit user info" submit={submit}>
             <div className="input-wrapper">
-              <div className="label-wrapper">
-                <label htmlFor="newName">User name</label>
-                {errorEditing && <span className="error">{errorEditing}</span>}
-              </div>
+              <label htmlFor="newName">User name</label>
               <input type="text" id="newName" name="newName" ref={newNameRef} />
             </div>
             <div className="input-wrapper">
@@ -110,21 +106,27 @@ function Dashboard() {
               <label>Last name</label>
               <input type="text" value={lastName} disabled />
             </div>
-            <div className="buttons-wrapper">
-              <button className="sign-in-button" type="submit">
-                Save
-              </button>
-              <button
-                className="sign-in-button"
-                type="reset"
-                onClick={() => {
-                  setIsEditing(false);
-                  setErrorEditing(false);
-                  dispatch(noError());
-                }}
-              >
-                Cancel
-              </button>
+            <div className="button-wrapper">
+              <div className="edit-buttons">
+                <button className="sign-in-button" type="submit">
+                  Save
+                </button>
+                <button
+                  className="sign-in-button"
+                  type="reset"
+                  onClick={() => {
+                    setIsEditing(false);
+                    dispatch(noError());
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+              {errorEditing ? (
+                <span className="error">{errorEditing}</span>
+              ) : (
+                <span className="error hidden">OK</span>
+              )}
             </div>
           </FormWrapper>
         )}

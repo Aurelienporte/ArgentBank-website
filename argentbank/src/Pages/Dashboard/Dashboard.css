@@ -50,12 +50,8 @@
     color: #fff;
     font-weight: bold;
     padding: 10px;
-}
-:disabled{
-    opacity: 0.7;
-}
-    
-.buttons-wrapper{
+}   
+.edit-buttons{
     display: flex;
     gap: 9px;
 }

@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    hasError: false,
+    hasError: "",
   }
 
   export const formSlice = createSlice({
     name:'form',
     initialState,
     reducers:{
-        hasError: (state) => {state.hasError = true},
+        hasError: (state, action) => {state.hasError = action.payload},
         noError: (state) => {state.hasError = false}
     },
   })
