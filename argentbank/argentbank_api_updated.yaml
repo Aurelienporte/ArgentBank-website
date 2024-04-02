@@ -99,19 +99,24 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
-  /user/transactions:
+  /user/{accountId}/transactions/:
     get:
       security:
         - Bearer: []
       tags:
         - User Module
       summary: User Transactions API
-      description: API for fetching user transactions
+      description: API for fetching user transactions for a given account
       parameters:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
+        - in: path
+          name: accountId
+          description: ID of the account
+          required: true
+          type: string
       responses:
         "200":
           description: User transactions retrieved successfully
@@ -134,7 +139,12 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
+        - in: path
+          name: accountId
+          description: ID of the account
+          required: true
+          type: string
         - in: body
           name: body
           description: Transaction Payload
@@ -154,19 +164,24 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-  /user/transactions?sortBy=date&from=dateStart&to=dateEnd:
+  /user/{accountId}/transactions/?sortBy="date"&from="dateStart"&to="dateEnd":
     get:
       security:
         - Bearer: []
       tags:
         - User Module
       summary: User Transactions API
-      description: API for fetching user transactions for a given month.
+      description: API for fetching user monthly transactions for a given account. If there are no values for dateStart and dateEnd, it returns transactions for the current month.
       parameters:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
+        - in: path
+          name: accountId
+          description: ID of the account
+          required: true
+          type: string
         - in: query
           name: dateStart
           type: string
@@ -202,7 +217,7 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction
@@ -233,7 +248,7 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction
@@ -271,7 +286,7 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction
@@ -309,7 +324,7 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction
@@ -340,7 +355,7 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction
@@ -378,7 +393,7 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction
@@ -416,7 +431,7 @@ paths:
         - name: "Bearer"
           in: "header"
           required: true
-          type: "apiKey"
+          type: string
         - in: path
           name: transactionId
           description: ID of the transaction
@@ -437,7 +452,7 @@ paths:
           description: Internal Server Error
 securityDefinitions:
   Bearer:
-    type: apiKey
+    type: "apiKey"
     name: Authorization
     in: header
 definitions:
